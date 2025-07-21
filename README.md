@@ -1,78 +1,84 @@
 # OpenMapTiles
 
+This project is a successor to `optgeo/openmaptiles-plain`, providing a template site for faithful visualization of OpenMapTiles vector tiles.
+
 このプロジェクトは `optgeo/openmaptiles-plain` の後継として、OpenMapTiles ベクトルタイルを忠実に可視化するテンプレートサイトです。
 
-## 特徴
+## Features / 特徴
 
-- **スタイル切り替え機能**: ドロップダウンメニューで複数のマップスタイルを選択可能
-- **URL パラメータ対応**: `?style=build` でスタイルを直接指定
-- **PMTiles 統合**: 効率的なベクトルタイル配信
-- **建物の立体表示**: 3D 建物レイヤーによる立体的な地図表現
-- **POI 詳細表示**: class/subclass 属性による多彩な色分け、rank による重要度表示
-- **属性情報表示**: 地図クリック時にフィーチャの属性を吹き出し表示
-- **GitHub Pages 対応**: 自動デプロイによる簡単な公開
+- **Style Switching**: Select multiple map styles via dropdown menu / **スタイル切り替え機能**: ドロップダウンメニューで複数のマップスタイルを選択可能
+- **URL Parameter Support**: Direct style specification with `?style=build` / **URL パラメータ対応**: `?style=build` でスタイルを直接指定
+- **PMTiles Integration**: Efficient vector tile delivery / **PMTiles 統合**: 効率的なベクトルタイル配信
+- **3D Building Display**: Three-dimensional map representation with 3D building layers / **建物の立体表示**: 3D 建物レイヤーによる立体的な地図表現
+- **Detailed POI Display**: Colorful classification by class/subclass attributes, importance display by rank / **POI 詳細表示**: class/subclass 属性による多彩な色分け、rank による重要度表示
+- **Attribute Information Display**: Feature attributes displayed in popup on map click / **属性情報表示**: 地図クリック時にフィーチャの属性を吹き出し表示
+- **GitHub Pages Support**: Easy publishing with automatic deployment / **GitHub Pages 対応**: 自動デプロイによる簡単な公開
 
-## 提供スタイル
+## Available Styles / 提供スタイル
 
-- **style.json**: 基本のグレースケールスタイル
-- **green.json**: 緑色系テーマのスタイル  
-- **build.json**: 建物を立体表示し、POI を多彩な色で表現するスタイル
-  - 40種類以上の施設タイプに対応した色分け
-  - rank による重要度フィルタリング
-  - ズームレベルに応じた動的フォントサイズ
+- **style.json**: Basic grayscale style / 基本のグレースケールスタイル
+- **green.json**: Green-themed style / 緑色系テーマのスタイル  
+- **build.json**: 3D buildings with colorful POI representation / 建物を立体表示し、POI を多彩な色で表現するスタイル
+  - Color coding for 40+ facility types / 40種類以上の施設タイプに対応した色分け
+  - Importance filtering by rank / rank による重要度フィルタリング
+  - Dynamic font sizing based on zoom level / ズームレベルに応じた動的フォントサイズ
 
-## URL パラメータ
+## URL Parameters / URL パラメータ
 
-スタイルを URL で直接指定できます：
+Styles can be specified directly via URL: / スタイルを URL で直接指定できます：
 
-- `https://optgeo.github.io/openmaptiles/` - デフォルト（build.json）
-- `https://optgeo.github.io/openmaptiles/?style=build` - 建物3Dスタイル
-- `https://optgeo.github.io/openmaptiles/?style=green` - 緑色テーマ
-- `https://optgeo.github.io/openmaptiles/?style=style` - 基本スタイル
+- `https://optgeo.github.io/openmaptiles/` - Default (build.json) / デフォルト（build.json）
+- `https://optgeo.github.io/openmaptiles/?style=build` - 3D Building Style / 建物3Dスタイル
+- `https://optgeo.github.io/openmaptiles/?style=green` - Green Theme / 緑色テーマ
+- `https://optgeo.github.io/openmaptiles/?style=style` - Basic Style / 基本スタイル
 
-## クイックスタート
+## Quick Start / クイックスタート
 
-### 開発環境での実行
+### Running in Development Environment / 開発環境での実行
 
 ```bash
-# 依存関係のインストール
+# Install dependencies / 依存関係のインストール
 npm install
 
-# 開発サーバーの起動
+# Start development server / 開発サーバーの起動
 npm run dev
 ```
 
-### ビルドとデプロイ
+### Build and Deploy / ビルドとデプロイ
 
 ```bash
-# スタイルファイルの生成
+# Generate style files / スタイルファイルの生成
 make style
 
-# プロダクションビルド
+# Production build / プロダクションビルド
 npm run build
 
-# GitHub Pages へのデプロイ
+# Deploy to GitHub Pages / GitHub Pages へのデプロイ
 npm run deploy
 ```
 
-## ディレクトリ構成
+## Directory Structure / ディレクトリ構成
 
-```
+```text
 .
-├── style-generation/   # Pkl スタイル定義ファイル
-├── public/            # 静的アセット
-├── docs/              # GitHub Pages デプロイ用
-├── index.html         # メインHTML
-├── main.js           # JavaScript エントリーポイント
-├── style.css         # CSS スタイル
-└── vite.config.js    # Vite 設定
+├── style-generation/   # Pkl style definition files / Pkl スタイル定義ファイル
+├── public/            # Static assets / 静的アセット
+├── docs/              # GitHub Pages deployment / GitHub Pages デプロイ用
+├── index.html         # Main HTML / メインHTML
+├── main.js           # JavaScript entry point / JavaScript エントリーポイント
+├── style.css         # CSS styles / CSS スタイル
+└── vite.config.js    # Vite configuration / Vite 設定
 ```
 
-## 技術仕様
+## Technical Specifications / 技術仕様
+
+For detailed technical specifications, configuration, and development information, see [NOTE.md](NOTE.md).
 
 詳細な技術仕様、設定、開発に関する情報は [NOTE.md](NOTE.md) を参照してください。
 
-## ライセンス
+## License / ライセンス
+
+This project is released under the CC0 1.0 Universal License. See the [LICENSE](LICENSE) file for details.
 
 このプロジェクトは CC0 1.0 Universal ライセンスの下で公開されています。詳細は [LICENSE](LICENSE) ファイルを参照してください。
 
