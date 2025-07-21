@@ -1,0 +1,409 @@
+// OpenMapTiles Build Style Configuration using PMTiles
+// このファイルは OpenMapTiles の全てのレイヤーをシンプルなグレー表示で可視化し、
+// 建物を fill-extrusion で立体的に表示します
+// PMTiles: https://tile.openstreetmap.jp/static/planet.pmtiles
+
+version = 8
+name = "OpenMapTiles Build MSX Colors"
+
+sources {
+  ["openmaptiles"] {
+    type = "vector"
+    url = "pmtiles://https://tile.openstreetmap.jp/static/planet.pmtiles"
+  }
+}
+
+glyphs = "https://tile.openstreetmap.jp/fonts/{fontstack}/{range}.pbf"
+center = new { 139.6917; 35.6895 }
+
+layers {
+  // 背景レイヤー - MSX白系
+  new {
+    id = "background"
+    type = "background"
+    paint {
+      ["background-color"] = "#F5F5F5"
+    }
+  }
+  // 水域（fill）- MSX青
+  new {
+    id = "water"
+    type = "fill"
+    source = "openmaptiles"
+    ["source-layer"] = "water"
+    paint {
+      ["fill-color"] = "#4B8BBF"
+    }
+  }
+  // 水路（line）- MSX明るい青
+  new {
+    id = "waterway"
+    type = "line"
+    source = "openmaptiles"
+    ["source-layer"] = "waterway"
+    paint {
+      ["line-color"] = "#7CB5DD"
+      ["line-width"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        4; 0.5
+        10; 2
+      }
+    }
+  }
+  // 陸地利用（fill）- MSX薄緑
+  new {
+    id = "landuse"
+    type = "fill"
+    source = "openmaptiles"
+    ["source-layer"] = "landuse"
+    paint {
+      ["fill-color"] = "#B5D6A7"
+      ["fill-opacity"] = 0.6
+    }
+  }
+  // 陸地被覆（fill）- MSX濃い緑
+  new {
+    id = "landcover"
+    type = "fill"
+    source = "openmaptiles"
+    ["source-layer"] = "landcover"
+    paint {
+      ["fill-color"] = "#6DAA6D"
+      ["fill-opacity"] = 0.4
+    }
+  }
+  // 道路（line）- 灰色系
+  new {
+    id = "transportation"
+    type = "line"
+    source = "openmaptiles"
+    ["source-layer"] = "transportation"
+    paint {
+      ["line-color"] = "#888888"
+      ["line-width"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        4; 0.3
+        8; 0.7
+        12; 1.5
+        16; 4
+        18; 6
+      }
+    }
+  }
+  // 建物（fill-extrusion）- 元の灰色
+  new {
+    id = "building"
+    type = "fill-extrusion"
+    source = "openmaptiles"
+    ["source-layer"] = "building"
+    minzoom = 13
+    paint {
+      ["fill-extrusion-color"] = "#aaaaaa"
+      ["fill-extrusion-height"] = new {
+        "case"
+        new { "has"; "render_height" }; new { "get"; "render_height" }
+        new { "has"; "levels" }; new { "*"; new { "to-number"; new { "get"; "levels" } }; 3 }
+        new { "=="; new { "get"; "building" }; "yes" }; 5
+        3
+      }
+      ["fill-extrusion-base"] = new {
+        "case"
+        new { "has"; "render_min_height" }; new { "get"; "render_min_height" }
+        0
+      }
+      ["fill-extrusion-opacity"] = 0.8
+    }
+  }
+  // 境界線（line）- MSX紫系
+  new {
+    id = "boundary"
+    type = "line"
+    source = "openmaptiles"
+    ["source-layer"] = "boundary"
+    filter = new { "in"; "admin_level"; 2; 4 }
+    paint {
+      ["line-color"] = "#B854C7"
+      ["line-width"] = new {
+        "case"
+        new { "=="; new { "get"; "admin_level" }; 2 }; 2
+        1
+      }
+      ["line-dasharray"] = new { 2; 2 }
+    }
+  }
+  // 山ピーク（symbol）
+  new {
+    id = "mountain-peak"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "mountain_peak"
+    minzoom = 10
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Regular" }
+      ["text-size"] = 12
+      ["text-anchor"] = "top"
+      ["text-offset"] = new { 0; 0.5 }
+      ["symbol-placement"] = "point"
+    }
+    paint {
+      ["text-color"] = "#B05A3C"  // MSX茶色系（山の土色）
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 地名ラベル - 国（symbol）
+  new {
+    id = "place-country"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "place"
+    filter = new { "=="; "class"; "country" }
+    minzoom = 2
+    maxzoom = 8
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Bold" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        2; 12
+        6; 18
+      }
+      ["text-transform"] = "uppercase"
+    }
+    paint {
+      ["text-color"] = "#212529"  // MSX黒系（国名は重要なので黒）
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 2
+    }
+  }
+  // 地名ラベル - 都市（symbol）
+  new {
+    id = "place-city"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "place"
+    filter = new { "in"; "class"; "city"; "town" }
+    minzoom = 4
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Semibold" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        4; 10
+        8; 14
+        12; 18
+      }
+    }
+    paint {
+      ["text-color"] = "#2A5490"  // MSXダークブルー（都市名）
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 地名ラベル - 村（symbol）
+  new {
+    id = "place-village"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "place"
+    filter = new { "in"; "class"; "village"; "hamlet"; "suburb" }
+    minzoom = 8
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Regular" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        8; 8
+        12; 12
+        16; 16
+      }
+    }
+    paint {
+      ["text-color"] = "#7B68EE"  // MSX薄紫（村名）
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 道路名（symbol）
+  new {
+    id = "transportation-name"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "transportation_name"
+    minzoom = 12
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Regular" }
+      ["text-size"] = 10
+      ["symbol-placement"] = "line"
+      ["text-rotation-alignment"] = "map"
+    }
+    paint {
+      ["text-color"] = "#FF8040"  // MSXオレンジ系（道路名）
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 水域名（symbol）
+  new {
+    id = "water-name"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "water_name"
+    minzoom = 6
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Italic" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        6; 10
+        12; 16
+      }
+    }
+    paint {
+      ["text-color"] = "#40A0FF"  // MSX明るい青（水域名）
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // POI（Points of Interest）（symbol）- class属性による多彩な色付け + rank活用
+  new {
+    id = "poi"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "poi"
+    minzoom = 12
+    filter = new {
+      "case"
+      new { "<"; new { "zoom" }; 14 }; new { "<="; new { "to-number"; new { "coalesce"; new { "get"; "rank" }; 99 } }; 10 }  // ズーム14未満：rank <= 10のみ
+      new { "<"; new { "zoom" }; 16 }; new { "<="; new { "to-number"; new { "coalesce"; new { "get"; "rank" }; 99 } }; 20 }  // ズーム16未満：rank <= 20のみ
+      true  // ズーム16以上：全て表示
+    }
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Bold" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "exponential"; 1.5 }
+        new { "zoom" }
+        11; new {
+          "case"
+          // 文字列長による調整（長い文字列ほど小さく）
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 20 }; 6   // 20文字以上：非常に小さく
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 15 }; 8   // 15文字以上：小さく
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 10 }; 10  // 10文字以上：標準
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 5 }; 11   // 5文字以上：やや大きく
+          12  // 5文字未満：大きく
+        }
+        22; new {
+          "case"
+          // ズーム最大時の文字列長による調整
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 20 }; 48  // 20文字以上：控えめ
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 15 }; 64  // 15文字以上：やや小さく
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 10 }; 80  // 10文字以上：標準
+          new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 5 }; 88   // 5文字以上：やや大きく
+          96  // 5文字未満：大きく
+        }
+      }
+      ["text-anchor"] = "top"
+      ["text-offset"] = new { 0; 0.8 }
+      ["text-max-width"] = new {
+        "case"
+        // 文字列が長い場合はより狭い幅で改行
+        new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 15 }; 6   // 15文字以上：狭い幅で改行
+        new { ">="; new { "length"; new { "coalesce"; new { "get"; "name_int" }; new { "get"; "name" } } }; 10 }; 8   // 10文字以上：やや狭い幅
+        10  // 10文字未満：標準幅
+      }
+    }
+    paint {
+      ["text-color"] = new {
+        "case"
+        // レストラン系 - 赤系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "restaurant" }; new { "=="; new { "get"; "subclass" }; "fast_food" } }; "#FF6060"    // 明るい赤 - ファストフード
+        new { "all"; new { "=="; new { "get"; "class" }; "restaurant" }; new { "=="; new { "get"; "subclass" }; "pizza" } }; "#FF3030"        // 鮮やかな赤 - ピザ
+        new { "all"; new { "=="; new { "get"; "class" }; "restaurant" }; new { "=="; new { "get"; "subclass" }; "japanese" } }; "#DC143C"      // クリムゾン - 和食
+        new { "=="; new { "get"; "class" }; "restaurant" }; "#FF4040"      // 標準赤 - その他レストラン
+
+        // カフェ・飲料系 - オレンジ系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "cafe" }; new { "=="; new { "get"; "subclass" }; "coffee_shop" } }; "#FF7F00"        // オレンジ - コーヒーショップ
+        new { "all"; new { "=="; new { "get"; "class" }; "cafe" }; new { "=="; new { "get"; "subclass" }; "tea" } }; "#FFA500"              // 黄金オレンジ - 茶店
+        new { "=="; new { "get"; "class" }; "cafe" }; "#FF8040"           // 標準オレンジ - その他カフェ
+
+        // ショッピング系 - 黄色系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "shop" }; new { "=="; new { "get"; "subclass" }; "supermarket" } }; "#FFD700"       // ゴールド - スーパーマーケット
+        new { "all"; new { "=="; new { "get"; "class" }; "shop" }; new { "=="; new { "get"; "subclass" }; "convenience" } }; "#FFFF00"       // 黄色 - コンビニ
+        new { "all"; new { "=="; new { "get"; "class" }; "shop" }; new { "=="; new { "get"; "subclass" }; "clothes" } }; "#FFF8DC"           // コーンシルク - 衣料品
+        new { "all"; new { "=="; new { "get"; "class" }; "shop" }; new { "=="; new { "get"; "subclass" }; "electronics" } }; "#FFEB3B"       // レモン黄 - 電気店
+        new { "=="; new { "get"; "class" }; "shop" }; "#FFD747"           // 標準黄 - その他ショップ
+
+        // 医療・健康系 - 緑系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "hospital" }; new { "=="; new { "get"; "subclass" }; "clinic" } }; "#32CD32"        // ライムグリーン - クリニック
+        new { "all"; new { "=="; new { "get"; "class" }; "hospital" }; new { "=="; new { "get"; "subclass" }; "pharmacy" } }; "#00FF7F"       // スプリンググリーン - 薬局
+        new { "=="; new { "get"; "class" }; "hospital" }; "#40FF40"       // 明るい緑 - その他病院
+
+        // 教育系 - 水色系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "school" }; new { "=="; new { "get"; "subclass" }; "university" } }; "#0066CC"       // ロイヤルブルー - 大学
+        new { "all"; new { "=="; new { "get"; "class" }; "school" }; new { "=="; new { "get"; "subclass" }; "college" } }; "#1E90FF"         // ドジャーブルー - 専門学校
+        new { "all"; new { "=="; new { "get"; "class" }; "school" }; new { "=="; new { "get"; "subclass" }; "kindergarten" } }; "#87CEEB"     // スカイブルー - 幼稚園
+        new { "=="; new { "get"; "class" }; "school" }; "#40D0FF"         // 標準水色 - その他学校
+
+        // 公園・レクリエーション系 - 緑系バリエーション
+        new { "all"; new { "=="; new { "get"; "class" }; "park" }; new { "=="; new { "get"; "subclass" }; "playground" } }; "#90EE90"        // ライトグリーン - 遊び場
+        new { "all"; new { "=="; new { "get"; "class" }; "park" }; new { "=="; new { "get"; "subclass" }; "garden" } }; "#228B22"           // フォレストグリーン - 庭園
+        new { "=="; new { "get"; "class" }; "park" }; "#6DAA6D"           // 標準深緑 - その他公園
+
+        // 宿泊系 - マゼンタ系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "hotel" }; new { "=="; new { "get"; "subclass" }; "motel" } }; "#FF1493"           // ディープピンク - モーテル
+        new { "all"; new { "=="; new { "get"; "class" }; "hotel" }; new { "=="; new { "get"; "subclass" }; "guest_house" } }; "#DA70D6"      // オーキッド - ゲストハウス
+        new { "=="; new { "get"; "class" }; "hotel" }; "#C040C0"          // 標準マゼンタ - その他ホテル
+
+        // 観光・娯楽系 - 紫系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "attraction" }; new { "=="; new { "get"; "subclass" }; "museum" } }; "#9370DB"       // ミディアムパープル - 博物館
+        new { "all"; new { "=="; new { "get"; "class" }; "attraction" }; new { "=="; new { "get"; "subclass" }; "zoo" } }; "#8A2BE2"         // ブルーバイオレット - 動物園
+        new { "all"; new { "=="; new { "get"; "class" }; "attraction" }; new { "=="; new { "get"; "subclass" }; "theme_park" } }; "#7B68EE"   // ミディアムスレートブルー - テーマパーク
+        new { "=="; new { "get"; "class" }; "attraction" }; "#B854C7"     // 標準紫 - その他観光地
+
+        // 金融系 - 青系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "bank" }; new { "=="; new { "get"; "subclass" }; "atm" } }; "#4169E1"             // ロイヤルブルー - ATM
+        new { "=="; new { "get"; "class" }; "bank" }; "#2A5490"           // 標準青 - その他銀行
+
+        // 燃料・自動車系 - 茶系グラデーション
+        new { "all"; new { "=="; new { "get"; "class" }; "fuel" }; new { "=="; new { "get"; "subclass" }; "charging_station" } }; "#D2691E"  // チョコレート - 充電ステーション
+        new { "=="; new { "get"; "class" }; "fuel" }; "#B05A3C"           // 標準茶 - ガソリンスタンド
+
+        // 郵便・通信系 - ピンク系
+        new { "=="; new { "get"; "class" }; "post" }; "#FF0080"           // ピンク - 郵便局
+
+        // 緊急サービス系 - 強い色
+        new { "=="; new { "get"; "class" }; "police" }; "#000080"         // ダークブルー - 警察
+        new { "=="; new { "get"; "class" }; "fire_station" }; "#FF0000"   // 真紅 - 消防署
+
+        // 文化・図書系 - 紫系
+        new { "=="; new { "get"; "class" }; "library" }; "#8000FF"        // 紫 - 図書館
+
+        // 宗教系 - ゴールド系
+        new { "all"; new { "=="; new { "get"; "class" }; "place_of_worship" }; new { "=="; new { "get"; "subclass" }; "temple" } }; "#FF8C00"  // ダークオレンジ - 寺院
+        new { "all"; new { "=="; new { "get"; "class" }; "place_of_worship" }; new { "=="; new { "get"; "subclass" }; "shrine" } }; "#FFA500"  // オレンジ - 神社
+        new { "all"; new { "=="; new { "get"; "class" }; "place_of_worship" }; new { "=="; new { "get"; "subclass" }; "church" } }; "#FFD700"  // ゴールド - 教会
+        new { "=="; new { "get"; "class" }; "place_of_worship" }; "#FFD700" // 標準ゴールド - その他宗教施設
+
+        "#FF69B4"  // ホットピンク - その他のPOI（目立つ色）
+      }
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+}

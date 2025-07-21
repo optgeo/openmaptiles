@@ -1,0 +1,296 @@
+// OpenMapTiles Plain Style Configuration using PMTiles
+// このファイルは OpenMapTiles の全てのレイヤーをシンプルなグレー表示で可視化します
+// PMTiles: https://tile.openstreetmap.jp/static/planet.pmtiles
+
+version = 8
+name = "OpenMapTiles Plain"
+
+sources {
+  ["openmaptiles"] {
+    type = "vector"
+    url = "pmtiles://https://tile.openstreetmap.jp/static/planet.pmtiles"
+  }
+}
+
+glyphs = "https://tile.openstreetmap.jp/fonts/{fontstack}/{range}.pbf"
+center = new { 139.6917; 35.6895 }
+
+layers {
+  // 背景レイヤー
+  new {
+    id = "background"
+    type = "background"
+    paint {
+      ["background-color"] = "#f8f8f8"
+    }
+  }
+  // 水域（fill）
+  new {
+    id = "water"
+    type = "fill"
+    source = "openmaptiles"
+    ["source-layer"] = "water"
+    paint {
+      ["fill-color"] = "#cccccc"
+    }
+  }
+  // 水路（line）
+  new {
+    id = "waterway"
+    type = "line"
+    source = "openmaptiles"
+    ["source-layer"] = "waterway"
+    paint {
+      ["line-color"] = "#cccccc"
+      ["line-width"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        4; 0.5
+        10; 2
+      }
+    }
+  }
+  // 陸地利用（fill）
+  new {
+    id = "landuse"
+    type = "fill"
+    source = "openmaptiles"
+    ["source-layer"] = "landuse"
+    paint {
+      ["fill-color"] = "#cccccc"
+      ["fill-opacity"] = 0.3
+    }
+  }
+  // 陸地被覆（fill）
+  new {
+    id = "landcover"
+    type = "fill"
+    source = "openmaptiles"
+    ["source-layer"] = "landcover"
+    paint {
+      ["fill-color"] = "#cccccc"
+      ["fill-opacity"] = 0.2
+    }
+  }
+  // 建物（fill）
+  new {
+    id = "building"
+    type = "fill"
+    source = "openmaptiles"
+    ["source-layer"] = "building"
+    minzoom = 13
+    paint {
+      ["fill-color"] = "#cccccc"
+      ["fill-opacity"] = 0.6
+    }
+  }
+  // 道路（line）
+  new {
+    id = "transportation"
+    type = "line"
+    source = "openmaptiles"
+    ["source-layer"] = "transportation"
+    paint {
+      ["line-color"] = "#cccccc"
+      ["line-width"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        4; 0.5
+        8; 1
+        12; 2.5
+        16; 6
+      }
+    }
+  }
+  // 境界線（line）
+  new {
+    id = "boundary"
+    type = "line"
+    source = "openmaptiles"
+    ["source-layer"] = "boundary"
+    filter = new { "in"; "admin_level"; 2; 4 }
+    paint {
+      ["line-color"] = "#cccccc"
+      ["line-width"] = new {
+        "case"
+        new { "=="; new { "get"; "admin_level" }; 2 }; 2
+        1
+      }
+      ["line-dasharray"] = new { 2; 2 }
+    }
+  }
+  // 山ピーク（symbol）
+  new {
+    id = "mountain-peak"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "mountain_peak"
+    minzoom = 10
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Regular" }
+      ["text-size"] = 12
+      ["text-anchor"] = "top"
+      ["text-offset"] = new { 0; 0.5 }
+      ["symbol-placement"] = "point"
+    }
+    paint {
+      ["text-color"] = "#cccccc"
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 地名ラベル - 国（symbol）
+  new {
+    id = "place-country"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "place"
+    filter = new { "=="; "class"; "country" }
+    minzoom = 2
+    maxzoom = 8
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Bold" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        2; 12
+        6; 18
+      }
+      ["text-transform"] = "uppercase"
+    }
+    paint {
+      ["text-color"] = "#cccccc"
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 2
+    }
+  }
+  // 地名ラベル - 都市（symbol）
+  new {
+    id = "place-city"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "place"
+    filter = new { "in"; "class"; "city"; "town" }
+    minzoom = 4
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Semibold" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        4; 10
+        8; 14
+        12; 18
+      }
+    }
+    paint {
+      ["text-color"] = "#cccccc"
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 地名ラベル - 村（symbol）
+  new {
+    id = "place-village"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "place"
+    filter = new { "in"; "class"; "village"; "hamlet"; "suburb" }
+    minzoom = 8
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Regular" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        8; 8
+        12; 12
+        16; 16
+      }
+    }
+    paint {
+      ["text-color"] = "#cccccc"
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 道路名（symbol）
+  new {
+    id = "transportation-name"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "transportation_name"
+    minzoom = 12
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Regular" }
+      ["text-size"] = 10
+      ["symbol-placement"] = "line"
+      ["text-rotation-alignment"] = "map"
+    }
+    paint {
+      ["text-color"] = "#cccccc"
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // 水域名（symbol）
+  new {
+    id = "water-name"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "water_name"
+    minzoom = 6
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new { "Open Sans Italic" }
+      ["text-size"] = new {
+        "interpolate"
+        new { "linear" }
+        new { "zoom" }
+        6; 10
+        12; 16
+      }
+    }
+    paint {
+      ["text-color"] = "#cccccc"
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+  // POI（Points of Interest）（symbol）
+  new {
+    id = "poi"
+    type = "symbol"
+    source = "openmaptiles"
+    ["source-layer"] = "poi"
+    minzoom = 12
+    layout {
+      ["text-field"] = new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } }
+      ["text-font"] = new {
+        "case"
+        new { "!="; new { "index-of"; "JICA"; new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } } }; -1 }; new { "literal"; new { "Open Sans Bold" } }
+        new { "literal"; new { "Open Sans Regular" } }
+      }
+      ["text-size"] = 10
+      ["text-anchor"] = "top"
+      ["text-offset"] = new { 0; 0.8 }
+    }
+    paint {
+      ["text-color"] = new {
+        "case"
+        new { "!="; new { "index-of"; "JICA"; new { "coalesce"; new { "get"; "name:ja" }; new { "get"; "name" } } }; -1 }; "#0000ff"
+        "#cccccc"
+      }
+      ["text-halo-color"] = "#ffffff"
+      ["text-halo-width"] = 1
+    }
+  }
+}

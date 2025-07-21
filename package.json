@@ -1,0 +1,26 @@
+{
+  "name": "openmaptiles",
+  "version": "1.0.0",
+  "description": "OpenMapTiles visualization template",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run style:check && vite",
+    "build": "npm run style:generate && vite build",
+    "preview": "vite preview",
+    "style:generate": "pkl eval -f json style-generation/style.pkl > public/style.json && cp public/style.json docs/style.json",
+    "style:check": "npm run style:generate",
+    "deploy": "npm run build && git add docs && git commit -m 'Deploy to GitHub Pages' && git push origin main",
+    "clean": "rm -rf docs/style.json dist",
+    "serve": "python3 -m http.server 8080 --directory docs",
+    "lint:style": "jq . docs/style.json > /dev/null && echo 'style.json is valid'",
+    "help": "echo 'Available commands: dev, build, preview, style:generate, deploy, clean, serve, lint:style'"
+  },
+  "dependencies": {
+    "maplibre-gl": "^5.6.1",
+    "pmtiles": "^3.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
