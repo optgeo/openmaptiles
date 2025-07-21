@@ -18,6 +18,10 @@ const map = new maplibregl.Map({
     hash: true, // URLのハッシュを使用してズームと中心を保存
 });
 
+map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.FullscreenControl());
+map.addControl(new maplibregl.GlobeControl());
+
 const dropdown = document.createElement('select');
 dropdown.id = 'styleSwitcher';
 document.body.appendChild(dropdown);
