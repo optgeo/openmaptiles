@@ -10,7 +10,8 @@ This project is a successor to `optgeo/openmaptiles-plain`, providing a template
 - **URL Parameter Support**: Direct style specification with `?style=build` / **URL パラメータ対応**: `?style=build` でスタイルを直接指定
 - **PMTiles Integration**: Efficient vector tile delivery / **PMTiles 統合**: 効率的なベクトルタイル配信
 - **3D Building Display**: Three-dimensional map representation with 3D building layers / **建物の立体表示**: 3D 建物レイヤーによる立体的な地図表現
-- **Detailed POI Display**: Colorful classification by class/subclass attributes, importance display by rank / **POI 詳細表示**: class/subclass 属性による多彩な色分け、rank による重要度表示
+- **Optimized POI Display**: Enhanced POI rendering with length-based font sizing and automatic line wrapping / **最適化されたPOI表示**: 文字数ベースのフォントサイズと自動改行による改良されたPOI表示
+- **Clean Boundary Lines**: Maritime and disputed boundaries excluded for cleaner visualization / **クリーンな境界線**: より見やすい表示のため海上・係争境界を除外
 - **Attribute Information Display**: Feature attributes displayed in popup on map click / **属性情報表示**: 地図クリック時にフィーチャの属性を吹き出し表示
 - **GitHub Pages Support**: Easy publishing with automatic deployment / **GitHub Pages 対応**: 自動デプロイによる簡単な公開
 
@@ -88,7 +89,3 @@ This project is released under the CC0 1.0 Universal License. See the [LICENSE](
 - [optgeo/openmaptiles-plain](https://github.com/optgeo/openmaptiles-plain) (前身プロジェクト)
 - [PMTiles](https://protomaps.com/docs/pmtilesjs/)
 - [Apple Pkl](https://pkl-lang.org/)
-
-- [optgeo/openmaptiles-plain](https://github.com/optgeo/openmaptiles-plain) - 元プロジェクト
-- [PMTiles Documentation](https://protomaps.com/docs/pmtilesjs/)
-- [OpenMapTiles Schema](https://openmaptiles.org/schema/)

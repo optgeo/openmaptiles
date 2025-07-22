@@ -118,13 +118,19 @@ layers {
       ["fill-extrusion-opacity"] = 0.8
     }
   }
-  // 境界線（line）- MSX紫系
+  // 境界線（line）- MSX紫系、海上境界とdisputed境界を除外
   new {
     id = "boundary"
     type = "line"
     source = "openmaptiles"
     ["source-layer"] = "boundary"
-    filter = new { "in"; "admin_level"; 2; 4 }
+    filter = new { 
+      "all"
+      new { "in"; "admin_level"; 2; 4 }  // admin_level 2 または 4 のみ
+      new { "=="; "$type"; "LineString" }  // LineStringのみ（ジオメトリタイプを限定）
+      new { "!="; "maritime"; 1 }  // 海上境界を除外
+      new { "!="; "disputed"; 1 }  // disputed境界を除外
+    }
     paint {
       ["line-color"] = "#B854C7"
       ["line-width"] = new {

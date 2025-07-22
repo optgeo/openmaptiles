@@ -315,9 +315,17 @@ map.on('click', (e) => {
 
 ### Style Optimization / スタイル最適化
 
-- Minimize number of layers / レイヤー数の最小化
-- Remove unnecessary properties / 不要なプロパティの削除
-- Zoom level-specific display control / ズームレベル別の表示制御
+- **Compact Pkl Syntax**: 73% code reduction in style.pkl (302→82 lines) / **コンパクトなPkl記法**: style.pklで73%のコード削減（302→82行）
+- **One-line Layer Definitions**: Simplified layer syntax for better maintainability / **1行レイヤー定義**: メンテナンス性向上のためのシンプルなレイヤー記法
+- **Minimize number of layers**: Layer consolidation / **レイヤー数の最小化**: レイヤーの統合
+- **Remove unnecessary properties**: Optimized property usage / **不要なプロパティの削除**: プロパティ使用の最適化
+- **Zoom level-specific display control**: Performance-aware rendering / **ズームレベル別の表示制御**: パフォーマンスを考慮したレンダリング
+
+### Text Rendering Optimization / テキストレンダリング最適化
+
+- **Length-based Font Sizing**: Dynamic font sizes based on text length for better readability / **文字数ベースのフォントサイズ**: 可読性向上のための文字数による動的フォントサイズ
+- **Automatic Line Wrapping**: POI text with `text-max-width` for proper display / **自動改行**: POIテキストの適切表示のための`text-max-width`設定
+- **Boundary Filtering**: Exclude maritime and disputed boundaries for cleaner maps / **境界線フィルタリング**: より見やすい地図のための海上・係争境界の除外
 
 ### Data Optimization / データ最適化
 
@@ -332,46 +340,30 @@ map.on('click', (e) => {
 - Type-safe style description / 型安全なスタイル記述
 - JSON output compatibility / JSON 出力による互換性
 - Modular configuration management / モジュラーな設定管理
+- Compact syntax for maintainable code / メンテナンス可能なコードのためのコンパクト記法
 
 ### OpenMapTiles Schema
 
 - Building height attributes: `render_height`, `render_min_height` / 建物高さ属性: `render_height`, `render_min_height`
 - POI classification: `class`, `subclass` / POI 分類: `class`, `subclass`
 - Rank information: `rank` / ランク情報: `rank`
+- Boundary attributes: `maritime`, `disputed` for filtering / 境界属性: フィルタリング用の`maritime`, `disputed`
 
 ### MapLibre GL JS
 
 - Open-source map library / オープンソースの地図ライブラリ
 - High-speed rendering with WebGL / WebGL による高速レンダリング
 - Pluggable architecture / プラグイン可能なアーキテクチャ
+- Advanced filtering capabilities / 高度なフィルタリング機能
 
-## パフォーマンス最適化
+## Maintenance and Optimization History / メンテナンスと最適化履歴
 
-### スタイル最適化
-- レイヤー数の最小化
-- 不要なプロパティの削除
-- ズームレベル別の表示制御
+### July 2025 / 2025年7月
 
-### データ最適化
-- PMTiles のタイル化レベル設定
-- 属性データの最適化
-- レイヤー別データ分離
-
-## 関連技術
-
-### Apple Pkl
-- 型安全なスタイル記述
-- JSON 出力による互換性
-- モジュラーな設定管理
-
-### OpenMapTiles Schema
-- 建物高さ属性: `render_height`, `render_min_height`
-- POI 分類: `class`, `subclass`
-- ランク情報: `rank`
-
-### MapLibre GL JS
-- High-speed rendering with WebGL / WebGL による高速レンダリング
-- Pluggable architecture / プラグイン可能なアーキテクチャ
+- **Code Optimization**: Reduced style.pkl from 302 to 82 lines (73% reduction) / **コード最適化**: style.pklを302行から82行に削減（73%削減）
+- **POI Font Improvements**: Implemented length-based font sizing with automatic line wrapping / **POIフォント改善**: 文字数ベースのフォントサイズと自動改行を実装
+- **Boundary Filtering**: Enhanced filtering to exclude maritime and disputed boundaries / **境界線フィルタリング**: 海上・係争境界を除外するフィルタリングを強化
+- **File Structure Cleanup**: Organized JSON generation to public/ and docs/ directories only / **ファイル構成整理**: JSON生成をpublic/とdocs/ディレクトリのみに整理
 
 ## Related Links / 関連リンク
 
